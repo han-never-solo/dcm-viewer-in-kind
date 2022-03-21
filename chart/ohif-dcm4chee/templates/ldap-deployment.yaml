@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ohif-dcm4chee.fullname" . }}-ldap
+  labels:
+    {{- include "ohif-dcm4chee.labels" . | nindent 4 }}
+    app: {{ include "ohif-dcm4chee.fullname" . }}-ldap
+spec:
+  selector:
+    matchLabels:
+      {{- include "ohif-dcm4chee.selectorLabels" . | nindent 6 }}
+      app: {{ include "ohif-dcm4chee.fullname" . }}-ldap
+  template:
+    metadata:
+      labels:
+        {{- include "ohif-dcm4chee.selectorLabels" . | nindent 8 }}
+        app: {{ include "ohif-dcm4chee.fullname" . }}-ldap
+    spec:
+      subdomain: ldap
+      containers:
+        - name: ldap
+          image: dcm4che/slapd-dcm4chee:2.6.0-25.2
+          env:
+            - name: LDAP_URLS
+              value: ldap:/// ldaps:///
+            - name: STORAGE_DIR
+              value: /storage/fs1
+            - name: ARCHIVE_HOST
+              value: {{ .Values.ldap.ldapArchiveHost }}
+            # - name: SYSLOG_HOST
+            #   value: {{ include "ohif-dcm4chee.fullname" . }}-logstash
+            - name: SYSLOG_PORT
+              value: "8514"
+            - name: SYSLOG_PROTOCOL
+              value: TLS
+          envFrom:
+            - secretRef:
+                name: {{ include "ohif-dcm4chee.fullname" . }}-ldap-secret
+          ports:
+            - containerPort: 389
+            - containerPort: 636
+          volumeMounts:
+            - name: ldap-data
+              mountPath: /var/lib/openldap/openldap-data
+            - name: ldap-conf
+              mountPath: /etc/openldap/slapd.d
+      volumes:
+        - name: ldap-data
+          emptyDir: {}
+          # hostPath:
+          #   path: /var/local/microk8s/ldap
+          #   type: DirectoryOrCreate
+        - name: ldap-conf
+          emptyDir: {}
+          # hostPath:
+          #   path: /var/local/microk8s/slapd.d
+          #   type: DirectoryOrCreate
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

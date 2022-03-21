@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ohif-dcm4chee.fullname" . }}-arc
+  labels:
+    {{- include "ohif-dcm4chee.labels" . | nindent 4 }}
+    app: {{ include "ohif-dcm4chee.fullname" . }}-arc
+spec:
+  # use nodeport to expose
+  type: NodePort
+  selector:
+    app: {{ include "ohif-dcm4chee.fullname" . }}-arc
+  ports:
+    - name: http
+      port: 8080
+      nodePort: 30080
+    - name: https
+      port: 8443
+    - name: management-http
+      port: 9990
+    - name: management-https
+      port: 9993
+    - name: dicom
+      port: 11112
+      nodePort: 31112
+    - name: dicom-tls
+      port: 2762
+    - name: mllp
+      port: 2575
+    - name: mllp-tls
+      port: 12575

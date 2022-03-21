@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ohif-dcm4chee.fullname" . }}-ohif
+  labels:
+    {{- include "ohif-dcm4chee.labels" . | nindent 4 }}
+    app: {{ include "ohif-dcm4chee.fullname" . }}-ohif
+spec:
+  type: NodePort
+  ports:
+  - name: ohif-port
+    port: 80
+    targetPort: 80
+    nodePort: 30888
+    protocol: TCP
+  selector:
+    app: {{ include "ohif-dcm4chee.fullname" . }}-ohif

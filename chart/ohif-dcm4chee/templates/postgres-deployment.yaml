@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+  labels:
+    {{- include "ohif-dcm4chee.labels" . | nindent 4 }}
+    app: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+spec:
+  selector:
+    matchLabels:
+      {{- include "ohif-dcm4chee.selectorLabels" . | nindent 6 }}
+      app: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "ohif-dcm4chee.selectorLabels" . | nindent 8 }}
+        app: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+    spec:
+      subdomain: db
+      containers:
+        - name: db
+          image: dcm4che/postgres-dcm4chee:14.1-25
+          envFrom:
+            - secretRef:
+                name: {{ include "ohif-dcm4chee.fullname" . }}-postgres-secret
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            # - name: localtime
+            #   mountPath: /etc/localtime
+            #   readOnly: true
+            # - name: timezone
+            #   mountPath: /etc/timezone
+            #   readOnly: true
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        # - name: localtime
+        #   hostPath:
+        #     path: /etc/localtime
+        #     type: File
+        # - name: timezone
+        #   hostPath:
+        #     path: /etc/timezone
+        #     type: File
+        - name: data
+          emptyDir: {}
+          # hostPath:
+          #   path: /var/local/microk8s/db
+          #   type: DirectoryOrCreate
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+  labels:
+    {{- include "ohif-dcm4chee.labels" . | nindent 4 }}
+    app: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+spec:
+  selector:
+    app: {{ include "ohif-dcm4chee.fullname" . }}-postgres
+  clusterIP: None
+  ports:
+    - port: 5432

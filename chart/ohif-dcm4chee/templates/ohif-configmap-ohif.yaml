@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+{{ include "ohif-dcm4chee.labels" . | indent 4 }}
+  name: {{ include "ohif-dcm4chee.fullname" . }}-ohif
+data:
+  app-config.js: |
+    window.config = {
+      routerBasename: '/',
+      showStudyList: {{ .Values.ohifConfig.showStudyList }},
+      prefetchStudies: {{ .Values.ohifConfig.prefetchStudies }},
+      filterQueryParam: {{ .Values.ohifConfig.filterQueryParam }},
+      enableFileAdapter: {{ .Values.ohifConfig.enableFileAdapter }},
+      enableStudyLazyLoad: {{ .Values.ohifConfig.enableStudyLazyLoad }},
+      enableAutoFullDynamicWWWC: {{ .Values.ohifConfig.enableAutoFullDynamicWWWC }},
+      enableMeasurementTableWarning: {{ .Values.ohifConfig.enableMeasurementTableWarning }},
+      enableMeasurementSaveBtn: {{ .Values.ohifConfig.enableMeasurementSaveBtn }},
+      servers: {
+        dicomWeb: [
+          {
+            name: 'Flywheel',
+            wadoUriRoot: '{{ .Values.ohifConfig.wadoUriRoot }}',
+            qidoRoot: '{{ .Values.ohifConfig.qidoRoot }}',
+            wadoRoot: '{{ .Values.ohifConfig.wadoRoot }}',
+            qidoSupportsIncludeField: {{ .Values.ohifConfig.qidoSupportsIncludeField }},
+            imageRendering: '{{ .Values.ohifConfig.imageRendering }}',
+            thumbnailRendering: '{{ .Values.ohifConfig.thumbnailRendering }}',
+          },
+        ],
+      },
+      hotkeys: [
+        // ~ Global
+        {
+          commandName: 'incrementActiveViewport',
+          label: 'Next Image Viewport',
+          keys: ['right'],
+        },
+        {
+          commandName: 'decrementActiveViewport',
+          label: 'Previous Image Viewport',
+          keys: ['left'],
+        },
+        { commandName: 'performUndo', label: 'Undo operation', keys: ['ctrl+z'] },
+    { commandName: 'performRedo', label: 'Redo operation', keys: ['ctrl+shift+z'] },
+        // Supported Keys: https://craig.is/killing/mice
+        // ~ Cornerstone Extension
+        { commandName: 'rotateViewportCW', label: 'Rotate Right', keys: ['r'] },
+        { commandName: 'rotateViewportCCW', label: 'Rotate Left', keys: ['l'] },
+        { commandName: 'invertViewport', label: 'Invert', keys: ['i'] },
+        {
+          commandName: 'flipViewportVertical',
+          label: 'Flip Horizontally',
+          keys: ['h'],
+        },
+        {
+          commandName: 'flipViewportHorizontal',
+          label: 'Flip Vertically',
+          keys: ['v'],
+        },
+        { commandName: 'scaleUpViewport', label: 'Zoom In', keys: ['+'] },
+        { commandName: 'scaleDownViewport', label: 'Zoom Out', keys: ['-'] },
+        { commandName: 'fitViewportToWindow', label: 'Zoom to Fit', keys: ['='] },
+        { commandName: 'resetViewport', label: 'Reset', keys: ['space'] },
+        { commandName: 'nextImage', label: 'Next Image', keys: ['down'] },
+        { commandName: 'previousImage', label: 'Previous Image', keys: ['up'] },
+        { commandName: 'nextBSlice', label: 'Next B Slice', keys: ['b'] },
+        {
+          commandName: 'nextViewportDisplaySet',
+          label: 'Previous Series',
+          keys: ['pagedown'],
+        },
+        {
+          commandName: 'previousViewportDisplaySet',
+          label: 'Next Series',
+          keys: ['pageup'],
+        },
+        { commandName: 'deleteMeasurement', label: 'Delete Measurement', keys: ['backspace'] },
+        // ~ Cornerstone Tools
+        { commandName: 'setActiveToolHotkey', commandOptions: { toolName: 'Zoom' }, label: 'Zoom', keys: ['z'] },
+        { commandName: 'setActiveToolHotkey', commandOptions: { toolName: 'Wwwc' }, label: 'Wwwc', keys: ['w', 'esc'] },
+        { commandName: 'setActiveToolHotkey', commandOptions: { toolName: 'Magnify' }, label: 'Magnify', keys: ['m'] },
+        { commandName: 'setActiveToolHotkey', commandOptions: { toolName: 'Pan' }, label: 'Pan', keys: ['p'] },
+        { commandName: 'setActiveToolHotkey', commandOptions: { toolName: 'StackScroll' }, label: 'Stack Scroll', keys: ['s'] },
+        { commandName: 'setActiveToolHotkey', commandOptions: { toolName: 'Angle' }, label: 'Angle', keys: ['a'] },
+        { commandName: 'prevMeasureTool', label: 'Previous Measurement Tool', keys: ['['] },
+        { commandName: 'nextMeasureTool', label: 'Next Measurement Tool', keys: [']'] },
+        { commandName: 'firstImage', label: 'First Image', keys: [ 'home' ] },
+        { commandName: 'lastImage', label: 'Last Image', keys: [ 'end' ] },
+        // ~ NIfTI only
+        {
+          commandName: 'nextTemporalSeries',
+          label: 'Next Time',
+          keys: ['.'],
+        },
+        {
+          commandName: 'previousTemporalSeries',
+          label: 'Previous Time',
+          keys: [','],
+        },
+        {
+          commandName: 'mpr2d',
+          label: '2D MPR',
+          keys: ['d'],
+        },
+        // ~ Window level presets
+        {
+          commandName: 'setFullDynamicWWWC',
+          label: 'Full Dynamic W/L',
+          keys: ['0'],
+        },
+        {
+          commandName: 'windowLevelPreset1',
+          label: 'W/L Preset 1',
+          keys: ['1'],
+        },
+        {
+          commandName: 'windowLevelPreset2',
+          label: 'W/L Preset 2',
+          keys: ['2'],
+        },
+        {
+          commandName: 'windowLevelPreset3',
+          label: 'W/L Preset 3',
+          keys: ['3'],
+        },
+        {
+          commandName: 'windowLevelPreset4',
+          label: 'W/L Preset 4',
+          keys: ['4'],
+        },
+        {
+          commandName: 'windowLevelPreset5',
+          label: 'W/L Preset 5',
+          keys: ['5'],
+        },
+        {
+          commandName: 'windowLevelPreset6',
+          label: 'W/L Preset 6',
+          keys: ['6'],
+        },
+        {
+          commandName: 'windowLevelPreset7',
+          label: 'W/L Preset 7',
+          keys: ['7'],
+        },
+        {
+          commandName: 'windowLevelPreset8',
+          label: 'W/L Preset 8',
+          keys: ['8'],
+        },
+        {
+          commandName: 'windowLevelPreset9',
+          label: 'W/L Preset 9',
+          keys: ['9'],
+        },
+      ],
+      extensionsConfig: {
+        rt: {
+          modulesBlackList: ['getPanelModule'],
+        },
+        'com.ohif.dicom-segmentation': {
+          modulesBlackList: ['getPanelModule'],
+        },
+      },
+    };

@@ -1,0 +1,49 @@
+# Default values for ohif-dcm4chee.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+ldap:
+  ldapArchiveHost: test
+  rootPass: some-ldap-pass
+  confPass: some-ldap-pass
+
+postgres:
+  pass: some-postgres-pass
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ohifConfig:
+  # ohifConfig.showStudyList -- show study list for projects
+  showStudyList: true
+  # ohifConfig.prefetchStudies -- eagerly load study images
+  prefetchStudies: true
+  # ohifConfig.enableFileAdapter -- enable file loader support: nifti or web image
+  enableFileAdapter: true
+  # ohifConfig.filterQueryParam -- enable filtering on url query param support
+  filterQueryParam: true
+  # ohifConfig.enableStudyLazyLoad -- enable lazy load support
+  enableStudyLazyLoad: true
+  # ohifConfig.enableAutoFullDynamicWWWC -- enable auto apply full dynamic wwwc
+  enableAutoFullDynamicWWWC: false
+  # ohifConfig.enableMeasurementTableWarning -- enable warnings on measurement table
+  enableMeasurementTableWarning: false
+  # ohifConfig.enableMeasurementSaveBtn -- enable measurement save btn on measurement table
+  enableMeasurementSaveBtn: false
+  # ohifConfig.wadoUriRoot -- path where the WADO-URI API is served
+  wadoUriRoot: 'http://localhost:8080/dcm4chee-arc/aets/DCM4CHEE/wado'
+  # ohifConfig.qidoRoot -- path where the QIDO-RS API is served
+  qidoRoot: 'http://localhost:8080/dcm4chee-arc/aets/DCM4CHEE/rs'
+  # ohifConfig.wadoRoot -- path where the WADO-RS API is served
+  wadoRoot: 'http://localhost:8080/dcm4chee-arc/aets/DCM4CHEE/rs'
+  # ohifConfig.qidoSupportsIncludeField -- enables "include" query support for QIDO-RS
+  qidoSupportsIncludeField: false
+  # ohifConfig.imageRendering -- protocol used to render images
+  imageRendering: 'wadors'
+  # ohifConfig.thumbnailRendering -- protocol used to render thumbnails
+  thumbnailRendering: 'wadors'

@@ -1,0 +1,70 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  # kubeadmConfigPatches:
+  # - |
+  #   kind: InitConfiguration
+  #   nodeRegistration:
+  #     kubeletExtraArgs:
+  #       node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 30080
+    hostPort: 8080
+    protocol: TCP
+  - containerPort: 31080
+    hostPort: 8880
+    protocol: TCP
+  - containerPort: 30888
+    hostPort: 8888
+    protocol: TCP
+  - containerPort: 31112
+    hostPort: 11112
+    protocol: TCP
+  # - containerPort: 8443
+  #   hostPort: 8443
+  #   protocol: TCP
+  # - containerPort: 9990
+  #   hostPort: 9990
+  #   protocol: TCP
+  # - containerPort: 9993
+  #   hostPort: 9993
+  #   protocol: TCP   
+  # - containerPort: 8880
+  #   hostPort: 8880
+  #   protocol: TCP
+  # - containerPort: 8843
+  #   hostPort: 8843
+  #   protocol: TCP
+  # - containerPort: 8890
+  #   hostPort: 8890
+  #   protocol: TCP
+  # - containerPort: 8993
+  #   hostPort: 8993
+  #   protocol: TCP
+    # arc
+    # - name: http
+    #   port: 8080
+    # - name: https
+    #   port: 8443
+    # - name: management-http
+    #   port: 9990
+    # - name: management-https
+    #   port: 9993
+    # - name: dicom
+    #   port: 11112
+    # - name: dicom-tls
+    #   port: 2762
+    # - name: mllp
+    #   port: 2575
+    # - name: mllp-tls
+    #   port: 12575
+    # keycloak
+    # - name: http
+    #   port: 8880
+    # - name: https
+    #   port: 8843
+    # - name: management-http
+    #   port: 8990
+    # - name: management-https
+    #   port: 8993
